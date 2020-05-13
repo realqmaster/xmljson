@@ -2,10 +2,13 @@ package org.my.test;
 
 import static io.restassured.RestAssured.given;
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 import org.junit.jupiter.api.Test;
-
+import org.springframework.core.io.ClassPathResource;
 import io.restassured.http.Header;
+import io.restassured.response.Response;
+import java.io.IOException;
 
 class XmljsonApplicationTests {
 
@@ -43,4 +46,23 @@ class XmljsonApplicationTests {
 
     assertEquals(jsonResponse, xmlResponse);
   }
+  
+  @Test
+  void contextAude() throws Exception {
+
+    Response xmlResponse =
+        given()
+            .log()
+            .all()
+            .body(new ClassPathResource("vitt2.xml").getFile())
+            .header(new Header("content-type", "application/xml"))
+            .header(new Header("accept", "text/plain"))
+            .when()
+            .post("/aude")
+            .thenReturn();
+
+    assertNotNull(xmlResponse);
+    assertEquals(200,xmlResponse.statusCode());
+  }
+  
 }
